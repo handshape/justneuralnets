@@ -103,11 +103,14 @@
                             </transformers>
                             <artifactSet>
                                 <excludes>
-                                    <exclude>*linux*</exclude>
-                                    <exclude>*macosx*</exclude>
-                                    <exclude>*android*</exclude>
-                                    <exclude>*-ios-*</exclude>
-                                    <exclude>*openjfx*</exclude>
+                                    <exclude>*:*:*:android-arm</exclude>
+                                    <exclude>*:*:*:android-arm64</exclude>
+                                    <exclude>*:*:*:android-x86</exclude>
+                                    <exclude>*:*:*:android-x86_64</exclude>
+                                    <exclude>*:*:*:windows-x86</exclude>
+                                    <exclude>*:*:*:linux-x86</exclude>
+                                    <exclude>*:*:*:linux-ppc64le</exclude>
+                                    <exclude>*:*:*:ios-arm64</exclude>
                                 </excludes>
                             </artifactSet>
                         </configuration>

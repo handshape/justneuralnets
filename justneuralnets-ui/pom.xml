@@ -59,19 +59,19 @@
                             </transformers>
                             <artifactSet>
                                 <excludes>
-                                    <exclude>*linux*</exclude>
-                                    <exclude>*x86.*</exclude>
-                                    <exclude>*ppc64*</exclude>
-                                    <exclude>*arm64*</exclude>
-                                    <exclude>*armhf*</exclude>
-                                    <exclude>*armeabi*</exclude>
-                                    <exclude>*macosx*</exclude>
-                                    <exclude>*android*</exclude>
-                                    <exclude>*-ios-*</exclude>
-    <!-- The following line needs to be revoved when moving to a JVM that 
-         doesn't roll in JavaFX. The JFoenix version will need to bump to 9 or 
-         higher, and the openjfx imports will have to jive with the VM version.
-    -->
+                                    <exclude>*:*:*:android-arm</exclude>
+                                    <exclude>*:*:*:android-arm64</exclude>
+                                    <exclude>*:*:*:android-x86</exclude>
+                                    <exclude>*:*:*:android-x86_64</exclude>
+                                    <exclude>*:*:*:windows-x86</exclude>
+                                    <exclude>*:*:*:linux-x86</exclude>
+                                    <exclude>*:*:*:linux-ppc64le</exclude>
+                                    <exclude>*:*:*:ios-arm64</exclude>
+
+                                    <!-- The following line needs to be revoved when moving to a JVM that 
+                                         doesn't roll in JavaFX. The JFoenix version will need to bump to 9 or 
+                                         higher, and the openjfx imports will have to jive with the VM version.
+                                    -->
                                     <exclude>*openjfx*</exclude>
                                 </excludes>
                             </artifactSet>
