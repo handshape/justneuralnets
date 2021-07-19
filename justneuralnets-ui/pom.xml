@@ -68,7 +68,7 @@
                                     <exclude>*:*:*:linux-ppc64le</exclude>
                                     <exclude>*:*:*:ios-arm64</exclude>
 
-                                    <!-- The following line needs to be revoved when moving to a JVM that 
+                                    <!-- The following line needs to be removed when moving to a JVM that 
                                          doesn't roll in JavaFX. The JFoenix version will need to bump to 9 or 
                                          higher, and the openjfx imports will have to jive with the VM version.
                                     -->
