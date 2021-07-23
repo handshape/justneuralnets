@@ -40,6 +40,7 @@ public class Main {
 
     public static void main(String[] arrghs) {
         try {
+            JnnRepository repo = JnnRepository.getInstance();
             String fileSpec = ".";
             int numFeatures = DEFAULT_NUMBER_OF_FEATURES;
             int numOccurrences = DEFAULT_NUMBER_OF_OCCURRENCES;
@@ -146,12 +147,12 @@ public class Main {
             WordVectorSerializer.writeWord2VecModel(vec, "word2vec.w2v");
             vec = null;
             vec = WordVectorSerializer.readWord2VecModel("word2vec.w2v", true);
-            for (String word : Arrays.asList("phone", "money", "computer", "deck", "minister", "rue", "marché", "pays")) {
+            for (String word : Arrays.asList("phone", "money", "computer", "deck", "regulation", "minister", "rue", "marché", "pays")) {
                 Logger.getLogger(Main.class.getName()).log(Level.INFO, "Closest words to \"{0}\":", word);
                 Collection<String> lst = vec.wordsNearest(word, 10);
                 System.out.println(lst);
             }
-            System.out.println("JNN ID: " + JnnRepository.getInstance().put(FileUtils.readFileToByteArray(new File("word2vec.w2v"))));
+            System.out.println("JNN ID: " + repo.put(FileUtils.readFileToByteArray(new File("word2vec.w2v"))));
 //            UIServer server = UIServer.getInstance();
 //            System.out.println("Started on port " + server.getPort());
         } catch (JnnRepoException | IOException ex) {

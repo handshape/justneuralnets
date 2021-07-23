@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class Word2VecDataField extends DataField implements IPreprocessingDataField {
 
     protected static final int MINIMUM_INCIDENCE = 3;
-    private static final String defaultKey = "3dfa6fab0c463f7d6c98592092f77acc00a5b5c90eef7d22be894af558f6a897";
+    private static final String defaultKey = "9b8dfca9f600000459b6166ddba85c022ee7c86eeaeec9ad0582e53a2108fa1e";
     //2660713cb325bc129d2627f2d0b1eafc3373486098bf736d899b6e2375f71b8a
     //0fa80ad8e13f23fcdc3131a611f2c9c0e8708295d2e34bff7c4b792fb63172e0
     private static SoftReference<Word2Vec> softRefSingletonWord2Vec = null;
