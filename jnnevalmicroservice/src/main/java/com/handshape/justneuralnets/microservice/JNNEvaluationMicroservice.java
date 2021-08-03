@@ -1,8 +1,6 @@
 package com.handshape.justneuralnets.microservice;
 
 import com.handshape.justneuralnets.JNNModelEvaluator;
-import com.handshape.justneuralnets.JNNModelEvaluator;
-import com.handshape.justneuralnets.JNNModelSpec;
 import com.handshape.justneuralnets.JNNModelSpec;
 import com.handshape.justneuralnets.datafields.DataField;
 import com.sun.net.httpserver.HttpExchange;
@@ -129,14 +127,14 @@ public class JNNEvaluationMicroservice {
                 }
                 sendResponse(exchange, code, "text/plain", response);
             } else {
-                Document doc = Jsoup.parseBodyFragment("");
+                Document doc = Jsoup.parse(getClass().getResourceAsStream("/www/index.html"), "UTF-8", exchange.getRequestURI().toASCIIString());
                 Element form = doc.body().appendElement("form");
                 form.attr("method", "GET");
                 form.attr("action", exchange.getRequestURI().toASCIIString());
                 for (DataField field : evaluator.getSpec().getDataFields()) {
                     form.appendText(field.getName());
                     form.appendElement("br");
-                    form.appendElement("input").attr("type", "text").attr("name", field.getName());
+                    form.appendElement("input").attr("type", "text").attr("class", "featureField").attr("name", field.getName());
                     form.appendElement("br");
                 }
                 form.appendElement("input").attr("type", "submit");
