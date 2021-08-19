@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +38,11 @@ import org.mapdb.DBMaker;
 import org.mapdb.DataInput2;
 import org.mapdb.DataOutput2;
 import org.mapdb.Serializer;
+import org.nd4j.linalg.api.buffer.DataType;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.ViewIterator;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
 
 /**
  * @author joturner
@@ -45,6 +52,7 @@ public class JNNModelTrainer {
     private HashSet<TrainingListener> nd4jTrainingListeners = new HashSet<>();
     private HashSet<JNNTrainingListener> jnnTrainingListeners = new HashSet<>();
     private boolean earlyStopRequested = false;
+    private static final int MINIBATCH_SIZE = 32;
 
     public void addNd4JListener(TrainingListener listener) {
         nd4jTrainingListeners.add(listener);
@@ -81,19 +89,24 @@ public class JNNModelTrainer {
                 ((IPreprocessingDataField) field).preprocess(input);
             }
         }
-        List<List<Writable>> trainingRecords = new ArrayList<>();
-        input.iterator().forEachRemaining((map) -> {
+        List<INDArray> trainingRecords = new ArrayList<>();
+        Iterator it = input.iterator();
+        while (it.hasNext()) {
+            Map<String, String> map = (Map<String, String>) it.next();
             try {
-                trainingRecords.add(Arrays.asList(spec.inputToTrainingWritableArray(map)));
+                trainingRecords.add(spec.inputToINDArray(map, true));
             } catch (JNNModelSpec.InvalidInputException ex) {
                 Logger.getLogger(JNNModelTrainer.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
-        List<List<Writable>> balancedTrainingRecords = spec.rebalanceCategories(trainingRecords);
-        List<List<Writable>> evaluationRecords = new ArrayList<>();
+        }
+        List<INDArray> balancedTrainingRecords = spec.rebalanceCategories(trainingRecords);
+        List<INDArray> evaluationRecords = new ArrayList<>();
         spec.splitTrainingAndEvaluation(balancedTrainingRecords, evaluationRecords, trainingSplitRatio);
-        List<DataSet> trainingDataSets = spec.recordsToDataSets(balancedTrainingRecords);
-        List<DataSet> evaluationDataSets = spec.recordsToDataSets(evaluationRecords);
+        //List<DataSet> trainingDataSets = spec.recordsToDataSets(balancedTrainingRecords);
+        //List<DataSet> evaluationDataSets = spec.recordsToDataSets(evaluationRecords);
+        DataSet trainingDataset = recordsToDataSet(spec, balancedTrainingRecords);
+        DataSet evaluationDataset = recordsToDataSet(spec, evaluationRecords);
+        ViewIterator viewIterator = new ViewIterator(trainingDataset, MINIBATCH_SIZE);
         MultiLayerNetwork multiLayerNetwork = buildMultiLayerNetwork(spec);
         //Initialize the user interface backend
 //        try {
@@ -107,8 +120,11 @@ public class JNNModelTrainer {
         for (int i = 0; i < epochs && !earlyStopRequested; i++) {
             int currentEpoch = i;
             jnnTrainingListeners.forEach(listener -> listener.startEpoch(currentEpoch));
-            trainingDataSets.forEach((dataSet) -> multiLayerNetwork.fit(dataSet));
-            Evaluation evaluation = multiLayerNetwork.evaluate(new ExistingDataSetIterator(evaluationDataSets));
+//            trainingDataSets.forEach((dataSet) -> multiLayerNetwork.fit(dataSet));
+            multiLayerNetwork.fit(viewIterator);
+            INDArray output = multiLayerNetwork.output(evaluationDataset.getFeatures());
+            Evaluation evaluation = new Evaluation();
+            evaluation.eval(evaluationDataset.getLabels(), output);
             jnnTrainingListeners.forEach(listener -> {
                 listener.evaluation(evaluation, multiLayerNetwork.score());
             });
@@ -143,6 +159,15 @@ public class JNNModelTrainer {
             return fittestNetwork;
         }
         return multiLayerNetwork;
+    }
+
+    private DataSet recordsToDataSet(final JNNModelSpec spec, List<INDArray> records) {
+        final int totalDataOutputFeatures = spec.totalDataOutputFeatures();
+        final int totalLabels = spec.totalLabels();
+        INDArray backingArray = Nd4j.create(records, records.size(), totalDataOutputFeatures + totalLabels);
+        INDArray features = backingArray.get(NDArrayIndex.all(), NDArrayIndex.interval(0, totalDataOutputFeatures));
+        INDArray labels = backingArray.get(NDArrayIndex.all(), NDArrayIndex.interval(totalDataOutputFeatures, totalDataOutputFeatures + totalLabels));
+        return new DataSet(features, labels);
     }
 
     private MultiLayerNetwork buildMultiLayerNetwork(JNNModelSpec spec) {

@@ -94,10 +94,10 @@ public class JNNModelSpecTest {
     }
 
     /**
-     * Test of inputToTrainingWritableArray method, of class JNNModelSpec.
+     * Test of inputToWritableArray method, of class JNNModelSpec.
      */
     @Test
-    public void testInputToTrainingWritableArray() throws Exception {
+    public void testInputToWritableArray() throws Exception {
         System.out.println("inputToTrainingWritableArray");
         Map<String, String> input = new TreeMap<>();
         input.put("testfield", "foo");
@@ -112,12 +112,12 @@ public class JNNModelSpecTest {
                 new DoubleWritable(1D),
                 new DoubleWritable(1D)
         };
-        Writable[] result = instance.inputToTrainingWritableArray(input);
+        Writable[] result = instance.inputToWritableArray(input);
         assertArrayEquals(expResult, result);
     }
 
     /**
-     * Test of inputToEvaluationINDArray method, of class JNNModelSpec.
+     * Test of inputToINDArray method, of class JNNModelSpec.
      */
     @Test
     public void testInputToEvaluationINDArray() throws Exception {
@@ -129,7 +129,7 @@ public class JNNModelSpecTest {
         instance.addDataField(new MultiValuedClosedVocabDataField("testfield", "foo", "bar", "baz"));
         instance.setLabelDataField(new BooleanDataField("labelfield"));
         INDArray expResult = Nd4j.create(new double[][]{new double[]{0D, 0D, 0D, 1D}});
-        INDArray result = instance.inputToEvaluationINDArray(input);
+        INDArray result = instance.inputToINDArray(input, false);
         assertEquals(expResult.toString(), result.toString());
     }
 
@@ -144,24 +144,21 @@ public class JNNModelSpecTest {
         instance.setLabelDataField(authors);
         EnglishWordStemDataField quoteFeature = new EnglishWordStemDataField("quote", 500);
         instance.addDataField(quoteFeature);
-        List<List<Writable>> trainingRecords = new ArrayList<>();
+        List<INDArray> trainingRecords = new ArrayList<>();
         CsvTabularInput csvQuotes = new CsvTabularInput(new File(getClass().getResource("/quotes.csv").toURI()));
-
         csvQuotes.iterator().forEachRemaining(map -> {
             try {
-                trainingRecords.add(Arrays.asList(instance.inputToTrainingWritableArray(map)));
+                trainingRecords.add(instance.inputToINDArray(map, true));
             } catch (JNNModelSpec.InvalidInputException ex) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
             }
         });
-        List<List<Writable>> balanced = instance.rebalanceCategories(trainingRecords);
+        List<INDArray> balanced = instance.rebalanceCategories(trainingRecords);
         assertEquals(67362, balanced.size());
-        List<List<Writable>> evaluationRecords = new ArrayList<>();
+        List<INDArray> evaluationRecords = new ArrayList<>();
         instance.splitTrainingAndEvaluation(balanced, evaluationRecords, 0.5);
         assertEquals(33681, balanced.size());
         assertEquals(33681, evaluationRecords.size());
-        List<DataSet> result = instance.recordsToDataSets(balanced);
-        assertEquals(33681, result.stream().map(DataSet::numExamples).reduce(Integer::sum).get());
 
     }
 }

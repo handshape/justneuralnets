@@ -31,7 +31,7 @@ public class JNNModelEvaluator {
     }
 
     public double evaluate(Map<String, String> input) throws JNNModelSpec.InvalidInputException {
-        INDArray evalArray = spec.inputToEvaluationINDArray(input);
+        INDArray evalArray = spec.inputToINDArray(input, false);
         INDArray output = evalNetwork.output(evalArray);
 //        System.out.println(output);
         return output.getDouble(0, 1);

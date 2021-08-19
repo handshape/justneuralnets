@@ -20,6 +20,9 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.deeplearning4j.datasets.iterator.ExistingDataSetIterator;
+import org.nd4j.linalg.indexing.NDArrayIndex;
+import org.nd4j.linalg.indexing.NDArrayIndexAll;
 
 /**
  * @author joturner
@@ -70,7 +73,7 @@ public class JNNModelSpec {
         return outputFeatures;
     }
 
-    public Writable[] inputToTrainingWritableArray(Map<String, String> input) throws InvalidInputException {
+    public Writable[] inputToWritableArray(Map<String, String> input) throws InvalidInputException {
         double[] features = inputToFeatures(input, true);
         Writable[] returnable = new Writable[features.length];
         for (int i = 0; i < returnable.length; i++) {
@@ -79,37 +82,38 @@ public class JNNModelSpec {
         return returnable;
     }
 
-    public INDArray inputToEvaluationINDArray(Map<String, String> input) throws InvalidInputException {
-        double[] features = inputToFeatures(input, false);
-        INDArray nested = Nd4j.zeros(totalDataOutputFeatures());
-        for (int i = 0; i < totalDataOutputFeatures(); i++) {
+    public INDArray inputToINDArray(Map<String, String> input, boolean includeLabels) throws InvalidInputException {
+        double[] features = inputToFeatures(input, includeLabels);
+        INDArray nested = Nd4j.zeros(features.length);
+        for (int i = 0; i < features.length; i++) {
             nested.putScalar(i, features[i]);
         }
         return Nd4j.create(Arrays.asList(nested), 1, nested.length());
 
     }
 
-    public List<List<Writable>> rebalanceCategories(List<List<Writable>> trainingRecords) {
-        List<List<Writable>> returnable = new ArrayList<>();
-        TreeMap<String, List<List<Writable>>> grouper = new TreeMap<>();
-        trainingRecords.forEach((List<Writable> record) -> {
-            String key = StringUtils.join(record.subList(record.size() - totalLabels(), record.size()), " ");
-            List<List<Writable>> group = grouper.getOrDefault(key, new ArrayList<>());
+    public List<INDArray> rebalanceCategories(List<INDArray> trainingRecords) {
+        List<INDArray> returnable = new ArrayList<>();
+        TreeMap<String, List<INDArray>> grouper = new TreeMap<>();
+        for (INDArray record : trainingRecords) {
+            String key = record.get(new NDArrayIndexAll(), NDArrayIndex.interval(record.length() - totalLabels(), record.length())).toString();
+            List<INDArray> group = grouper.getOrDefault(key, new ArrayList<>());
             group.add(record);
             grouper.put(key, group);
-        });
+        };
         // The grouper now holds all the training data, grouped by label.
         int largestGroupSize = 0;
         int smallestGroupSize = Integer.MAX_VALUE;
-        for (Map.Entry<String, List<List<Writable>>> group : grouper.entrySet()) {
+        Logger.getLogger(JNNModelSpec.class.getName()).log(Level.INFO, "Label keys: {0} ", Arrays.deepToString(new ArrayList(grouper.keySet()).toArray()));
+        for (Map.Entry<String, List<INDArray>> group : grouper.entrySet()) {
             largestGroupSize = Math.max(largestGroupSize, group.getValue().size());
             smallestGroupSize = Math.min(smallestGroupSize, group.getValue().size());
         }
         Logger.getLogger(JNNModelSpec.class.getName()).log(Level.INFO, "Largest training group: {0} elements.", largestGroupSize);
         Logger.getLogger(JNNModelSpec.class.getName()).log(Level.INFO, "Smallest training group: {0} elements.", smallestGroupSize);
         //TODO: Warn the user if the smallest group is silly-small.
-        for (Map.Entry<String, List<List<Writable>>> group : grouper.entrySet()) {
-            List<List<Writable>> entries = group.getValue();
+        for (Map.Entry<String, List<INDArray>> group : grouper.entrySet()) {
+            List<INDArray> entries = group.getValue();
             Collections.shuffle(entries);
             int index = 0;
             while (entries.size() < largestGroupSize) {
@@ -133,7 +137,7 @@ public class JNNModelSpec {
      * @param evaluationRecords
      * @param ratio
      */
-    void splitTrainingAndEvaluation(List<List<Writable>> trainingRecords, List<List<Writable>> evaluationRecords, double ratio) {
+    void splitTrainingAndEvaluation(List<INDArray> trainingRecords, List<INDArray> evaluationRecords, double ratio) {
         trainingRecords.addAll(evaluationRecords);
         evaluationRecords.clear();
         Collections.shuffle(trainingRecords);
@@ -153,27 +157,6 @@ public class JNNModelSpec {
 
     public List<DataField> getDataFields() {
         return new ArrayList<>(dataFields);
-    }
-
-    public List<DataSet> recordsToDataSets(List<List<Writable>> records) {
-
-        RecordReader reader = new CollectionRecordReader(records) {
-            @Override
-            public List<String> getLabels() {
-                ArrayList<String> returnable = new ArrayList<>();
-                for (int i = 0; i < labelDataField.getNumberOfFeatures(); i++) {
-                    returnable.add(labelDataField.valueAtIndex(i));
-                }
-                return returnable;
-            }
-        };
-        int miniBatchSize = 128;
-        RecordReaderDataSetIterator rrdsi = new RecordReaderDataSetIterator(reader, miniBatchSize, totalDataOutputFeatures(), totalDataOutputFeatures() + totalLabels() - 1, true);
-        List<DataSet> dataSets = new ArrayList<>();
-        while (rrdsi.hasNext()) {
-            dataSets.add(rrdsi.next());
-        }
-        return dataSets;
     }
 
     /**
@@ -207,7 +190,7 @@ public class JNNModelSpec {
 
     public void writeTo(File file) throws IOException {
         file.delete();
-        try (FileOutputStream fos = new FileOutputStream(file)) {
+        try ( FileOutputStream fos = new FileOutputStream(file)) {
             writeTo(fos);
             fos.flush();
             fos.close();
