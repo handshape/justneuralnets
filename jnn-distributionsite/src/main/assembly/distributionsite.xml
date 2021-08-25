@@ -8,7 +8,7 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>../justiceneuralnets-ui/target/site</directory>
+            <directory>../justneuralnets-ui/target/site</directory>
         </fileSet>
         <fileSet>
             <directory>../jnnevalmicroservice/target/site</directory>
@@ -22,11 +22,11 @@
     </fileSets>
     <files>
         <!--file>
-            <source>../jnnevalmicroservice/target/justiceneuralnets-evalmicroservice-1.0-SNAPSHOT-bin.jar</source>
+            <source>../jnnevalmicroservice/target/justneuralnets-evalmicroservice-1.0-SNAPSHOT-bin.jar</source>
             <outputDirectory>dist</outputDirectory>
         </file-->
         <!--file>
-            <source>../justiceneuralnets-ui/target/justiceneuralnets-ui-1.0-SNAPSHOT-bin.jar</source>
+            <source>../justneuralnets-ui/target/justneuralnets-ui-1.0-SNAPSHOT-bin.jar</source>
             <outputDirectory>dist</outputDirectory>
         </file-->
         <file>
