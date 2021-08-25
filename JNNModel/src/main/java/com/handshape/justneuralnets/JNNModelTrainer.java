@@ -52,7 +52,7 @@ public class JNNModelTrainer {
     private HashSet<TrainingListener> nd4jTrainingListeners = new HashSet<>();
     private HashSet<JNNTrainingListener> jnnTrainingListeners = new HashSet<>();
     private boolean earlyStopRequested = false;
-    private static final int MINIBATCH_SIZE = 32;
+    private static final int MINIBATCH_SIZE = 128;
 
     public void addNd4JListener(TrainingListener listener) {
         nd4jTrainingListeners.add(listener);
