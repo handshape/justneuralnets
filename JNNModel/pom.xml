@@ -135,7 +135,7 @@
         <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-storage-blob</artifactId>
-            <version>12.4.0</version>
+            <version>12.13.0</version>
         </dependency>
         <!-- The jackson-core dependency is an undeclareed dependency for 
         azure-storage-blob. Future maintainers will have to track this manually 
@@ -143,7 +143,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.10.3</version>
+            <version>2.12.4</version>
         </dependency>
         <dependency>
             <groupId>org.mapdb</groupId>
