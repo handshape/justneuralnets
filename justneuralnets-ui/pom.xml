@@ -69,18 +69,12 @@
                                     <exclude>*:*:*:linux-ppc64le</exclude>
                                     <exclude>*:*:*:ios-arm64</exclude>
 
-                                    <!-- The following line needs to be removed when moving to a JVM that 
-                                         doesn't roll in JavaFX. The JFoenix version will need to bump to 9 or 
-                                         higher, and the openjfx imports will have to jive with the VM version.
-                                    -->
-                                    <exclude>*openjfx*</exclude>
                                 </excludes>
                             </artifactSet>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <!-- Maven compiler plugin: compile for Java 8 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -147,36 +141,31 @@
             <version>11.48</version>
             <type>jar</type>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
             <version>11.0.2</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>11.0.2</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>11.0.2</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
             <version>11.0.2</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>11.0.2</version>
-            <scope>provided</scope>
-        </dependency-->
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

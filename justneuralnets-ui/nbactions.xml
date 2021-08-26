@@ -24,8 +24,8 @@
             <properties>
                 <exec.vmArgs></exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>-Xmx16G</exec.appArgs>
-                <exec.mainClass>${packageClassName}</exec.mainClass>
+                <exec.appArgs>-Djdk.gtk.version=2</exec.appArgs>
+                <exec.mainClass>com.handshape.justneuralnets.ui.Main</exec.mainClass>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -41,8 +41,8 @@
             <properties>
                 <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>-Xmx16G</exec.appArgs>
-                <exec.mainClass>${packageClassName}</exec.mainClass>
+                <exec.appArgs>-Djdk.gtk.version=2</exec.appArgs>
+                <exec.mainClass>com.handshape.justneuralnets.ui.Main</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
             </properties>
@@ -59,9 +59,9 @@
             <properties>
                 <exec.vmArgs></exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.mainClass>${packageClassName}</exec.mainClass>
+                <exec.mainClass>com.handshape.justneuralnets.ui.Main</exec.mainClass>
                 <exec.executable>java</exec.executable>
-                <exec.appArgs>-Xmx16G</exec.appArgs>
+                <exec.appArgs>-Djdk.gtk.version=2</exec.appArgs>
             </properties>
         </action>
     </actions>
