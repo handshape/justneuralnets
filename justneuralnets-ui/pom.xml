@@ -157,11 +157,11 @@
             <version>17.0.0.1</version>
         </dependency>
         <dependency>
-            <!-- Since Java 16, JavaFX doesn't like being loaded from the anonymous root module. For the moment, it only  -->
+            <!-- Since Java 16, JavaFX doesn't like being loaded from the anonymous root module. For the moment, it only emits a warning. -->
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
             <version>17.0.0.1</version>
-        </dependency>emits a warning.
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
