@@ -34,7 +34,7 @@ public class JNNModelSpec {
     private int[] layerSizes = new int[0];
 
     public static JNNModelSpec readFrom(InputStream is) {
-        Kryo kryo = new Kryo();
+        Kryo kryo = KryoFactory.getInstance();
         Input in = new Input(is);
         return (JNNModelSpec) kryo.readClassAndObject(in);
     }
@@ -182,7 +182,7 @@ public class JNNModelSpec {
     }
 
     public void writeTo(OutputStream os) {
-        Kryo kryo = new Kryo();
+        Kryo kryo = KryoFactory.getInstance();
         Output out = new Output(os);
         kryo.writeClassAndObject(out, this);
         out.flush();
