@@ -388,7 +388,19 @@
             window.addEventListener("load", function () {
                 // Standalone
                 var Gauge = window.Gauge;
-
+                window.updateGauge = function () {
+                    const data = new URLSearchParams();
+                    for (const pair of new FormData(document.querySelectorAll("form")[0])) {
+                        data.append(pair[0], pair[1]);
+                    }
+                    fetch("?" + data.toString(), {
+                        method: 'get',
+                    }).then(function (response) {
+                        response.text().then(function (text) {
+                            window.cpuGauge.setValueAnimated(parseFloat(text) * 100, 1);
+                        });
+                    });
+                };
                 // Create a new Gauge
                 window.cpuGauge = Gauge(document.getElementById("confidence"), {
                     max: 100,
@@ -411,21 +423,18 @@
                     }
                 });
 
+
+
                 window.cpuGauge.setValueAnimated(0, 1);
                 var fields = document.querySelectorAll(".featureField");
                 for (var i = 0; i < fields.length; i++) {
-                    fields[i].addEventListener("change", function () {
-                        const data = new URLSearchParams();
-                        for (const pair of new FormData(document.querySelectorAll("form")[0])) {
-                            data.append(pair[0], pair[1]);
-                        }
-                        fetch("?"+data.toString(), {
-                            method: 'get',
-                        }).then(function (response) {
-                            response.text().then(function (text) {
-                                window.cpuGauge.setValueAnimated(parseFloat(text) * 100, 1);
-                            });
-                        });
+                    fields[i].addEventListener("change", window.updateGauge);
+                }
+                var forms = document.querySelectorAll("form");
+                for (var i = 0; i < forms.length; i++) {
+                    forms[i].addEventListener("submit", function() {
+                        event.preventDefault();
+                        window.updateGauge();
                     });
                 }
             });
