@@ -147,7 +147,14 @@ public class Main {
             WordVectorSerializer.writeWord2VecModel(vec, "word2vec.w2v");
             vec = null;
             vec = WordVectorSerializer.readWord2VecModel("word2vec.w2v", true);
-            for (String word : Arrays.asList("phone", "money", "computer", "deck", "regulation", "minister", "rue", "marché", "pays")) {
+            Logger.getLogger(Main.class.getName()).log(Level.INFO, "Basic term tests:");
+            for (String word : Arrays.asList("phone", "money", "computer", "deck", "regulation", "minister")) {
+                Logger.getLogger(Main.class.getName()).log(Level.INFO, "Closest words to \"{0}\":", word);
+                Collection<String> lst = vec.wordsNearest(word, 10);
+                System.out.println(lst);
+            }
+            Logger.getLogger(Main.class.getName()).log(Level.INFO, "Non-English term tests:");
+            for (String word : Arrays.asList("rue", "marché", "pays", "soulier")) {
                 Logger.getLogger(Main.class.getName()).log(Level.INFO, "Closest words to \"{0}\":", word);
                 Collection<String> lst = vec.wordsNearest(word, 10);
                 System.out.println(lst);
