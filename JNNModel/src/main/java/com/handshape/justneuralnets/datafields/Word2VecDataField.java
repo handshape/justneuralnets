@@ -5,7 +5,6 @@ import com.handshape.justneuralnets.design.DesignFieldConfig;
 import com.handshape.justneuralnets.input.ITabularInput;
 import com.handshape.justneuralnets.repo.JnnRepoException;
 import com.handshape.justneuralnets.repo.JnnRepository;
-import java.io.ByteArrayInputStream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +28,9 @@ import java.util.logging.Logger;
 public class Word2VecDataField extends DataField implements IPreprocessingDataField {
 
     protected static final int MINIMUM_INCIDENCE = 3;
-    private static final String defaultKey = "9b8dfca9f600000459b6166ddba85c022ee7c86eeaeec9ad0582e53a2108fa1e";
+    private static final String DEFAULT_KEY = "946ee5b2218601c89db8590d0e0af6812433e991c18922628f6ea7cbe6d564e8";
+    //742d9b6e265aa1283337554204cfd44af50296ddd88d0cba6de4c7b530e50cda
+    //9b8dfca9f600000459b6166ddba85c022ee7c86eeaeec9ad0582e53a2108fa1e
     //2660713cb325bc129d2627f2d0b1eafc3373486098bf736d899b6e2375f71b8a
     //0fa80ad8e13f23fcdc3131a611f2c9c0e8708295d2e34bff7c4b792fb63172e0
     private static SoftReference<Word2Vec> softRefSingletonWord2Vec = null;
@@ -76,8 +77,8 @@ public class Word2VecDataField extends DataField implements IPreprocessingDataFi
         File temp = null;
         try {
             temp = File.createTempFile("w2v", ".zip");
-            byte[] bytes = JnnRepository.getInstance().getBytes(defaultKey);
-            System.out.println(defaultKey);
+            byte[] bytes = JnnRepository.getInstance().getBytes(DEFAULT_KEY);
+            System.out.println(DEFAULT_KEY);
             System.out.println(DigestUtils.sha256Hex(bytes));
             FileUtils.writeByteArrayToFile(temp, bytes);
             returnable = WordVectorSerializer.readWord2VecModel(temp, true);
@@ -87,7 +88,7 @@ public class Word2VecDataField extends DataField implements IPreprocessingDataFi
         } finally {
             if (temp != null && !temp.delete()) {
                 temp.deleteOnExit();
-        }
+            }
         }
         return returnable;
     }

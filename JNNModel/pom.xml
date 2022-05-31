@@ -132,11 +132,6 @@
             <artifactId>Snowball</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-storage-blob</artifactId>
-            <version>12.13.0</version>
-        </dependency>
         <!-- The jackson-core dependency is an undeclareed dependency for 
         azure-storage-blob. Future maintainers will have to track this manually 
         unless the Azure folks fix their POM. -->

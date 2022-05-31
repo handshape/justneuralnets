@@ -1,16 +1,11 @@
 package com.handshape.justneuralnets.repo;
 
-import com.handshape.justneuralnets.repo.TieredFallbackMetaRepository;
-import com.handshape.justneuralnets.repo.MemoryJnnRepository;
-import com.handshape.justneuralnets.repo.FilesystemJnnRepository;
 import com.handshape.justneuralnets.JNNModelSpec;
 import com.handshape.justneuralnets.JNNModelTrainer;
-import com.handshape.justneuralnets.crypto.CryptoUtils;
 import com.handshape.justneuralnets.datafields.EnglishIncidenceFilteredTextField;
 import com.handshape.justneuralnets.datafields.IncidenceFilteredTextField;
 import com.handshape.justneuralnets.datafields.MultiValuedClosedVocabDataField;
 import com.handshape.justneuralnets.input.CsvTabularInput;
-import com.handshape.justneuralnets.repo.abs.BlobContainerClientMock;
 import org.apache.commons.io.FileUtils;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.junit.jupiter.api.*;
@@ -65,7 +60,6 @@ public class TieredFallbackMetaRepositoryTest {
         System.out.println("Repository Integration - Testing completely new repo.");
         File workingDir = File.createTempFile("repo", "dir");
         try {
-            final BlobContainerClientMock blobContainerClientMock = new BlobContainerClientMock();
             workingDir.delete();
             MemoryJnnRepository mmr = new MemoryJnnRepository(3);
             FilesystemJnnRepository fmr = new FilesystemJnnRepository(workingDir);

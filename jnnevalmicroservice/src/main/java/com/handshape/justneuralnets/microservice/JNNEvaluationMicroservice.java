@@ -28,6 +28,9 @@ import java.util.logging.Logger;
  */
 public class JNNEvaluationMicroservice {
 
+    private static final String FORWARDED_USER_HEADER = "X-Forwarded-User";
+    private static final String ANONYMOUS_USER = "anon";
+    
     private File modelFile;
     private File schemeFile;
     private HttpServer server;
@@ -113,7 +116,8 @@ public class JNNEvaluationMicroservice {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            System.out.println(exchange.getRequestURI());
+            String user = exchange.getRequestHeaders().containsKey(FORWARDED_USER_HEADER) ? exchange.getRequestHeaders().getFirst(FORWARDED_USER_HEADER) : ANONYMOUS_USER;
+            Logger.getLogger(JNNEvaluationMicroservice.class.getName()).log(Level.INFO, user + " - " + exchange.getRequestURI());
             Map<String, String> evaluationData = splitQuery(exchange.getRequestURI());
             if (evaluationData != null && !evaluationData.isEmpty()) {
                 int code = 200;
