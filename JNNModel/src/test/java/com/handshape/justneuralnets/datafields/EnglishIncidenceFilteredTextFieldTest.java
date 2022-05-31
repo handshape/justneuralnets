@@ -6,6 +6,7 @@ import com.handshape.justneuralnets.input.CsvTabularInput;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.handshape.justneuralnets.KryoFactory;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -41,7 +42,7 @@ public class EnglishIncidenceFilteredTextFieldTest {
         assertTrue(instance.getWhiteList().isEmpty());
         instance.preprocess(tab);
         assertTrue(!instance.getWhiteList().isEmpty());
-        Kryo kryo = new Kryo();
+        Kryo kryo = KryoFactory.getInstance();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Output out = new Output(baos);
         kryo.writeClassAndObject(out, instance);

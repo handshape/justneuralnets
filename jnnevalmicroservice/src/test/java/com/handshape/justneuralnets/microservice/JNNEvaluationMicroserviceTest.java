@@ -1,6 +1,5 @@
 package com.handshape.justneuralnets.microservice;
 
-import com.handshape.justneuralnets.microservice.JNNEvaluationMicroservice;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,10 +32,10 @@ public class JNNEvaluationMicroserviceTest {
             service.setModelFile(new File(getClass().getResource("/xor.mdl").toURI()));
             service.setSchemeFile(new File(getClass().getResource("/xor.jnn").toURI()));
             service.start(8888);
-            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=true&b=false")) > 0.5, "XOR tests");
-            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=false&b=true")) > 0.5, "XOR tests");
-            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=true&b=true")) < 0.5, "XOR tests");
-            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=false&b=false")) < 0.5, "XOR tests");
+            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=true&b=false")) < 0.5, "XOR tests");
+            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=false&b=true")) < 0.5, "XOR tests");
+            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=true&b=true")) > 0.5, "XOR tests");
+            Assertions.assertTrue(Double.parseDouble(grabURL("http://localhost:8888/?a=false&b=false")) > 0.5, "XOR tests");
             Document doc = Jsoup.parse(new URL("http://localhost:8888/"), 1000);
             System.out.println(doc.toString());
             Assertions.assertTrue(doc.select("input").size() == 3);
