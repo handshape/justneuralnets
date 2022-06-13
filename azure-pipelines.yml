@@ -49,5 +49,5 @@ steps:
     artifact: site
   - publish: $(System.DefaultWorkingDirectory)/jnnevalmicroservice/target/justneuralnets-evalmicroservice-1.0-SNAPSHOT-bin.jar
     artifact: jnnmicroservice.jar
-  - publish: $(System.DefaultWorkingDirectory)/justiceneuralnets-ui/target/jusneuralnets-ui-1.0-SNAPSHOT-bin.jar
+  - publish: $(System.DefaultWorkingDirectory)/justneuralnets-ui/target/jusneuralnets-ui-1.0-SNAPSHOT-bin.jar
     artifact: jnn-ui.jar
