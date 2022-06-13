@@ -47,28 +47,7 @@ steps:
 
   - publish: $(System.DefaultWorkingDirectory)/jnn-distributionsite/target/jnn-distributionsite-1.0-SNAPSHOT-site
     artifact: site
-  - publish: $(System.DefaultWorkingDirectory)/jnnevalmicroservice/target/justiceneuralnets-evalmicroservice-1.0-SNAPSHOT-bin.jar
+  - publish: $(System.DefaultWorkingDirectory)/jnnevalmicroservice/target/justneuralnets-evalmicroservice-1.0-SNAPSHOT-bin.jar
     artifact: jnnmicroservice.jar
-  - publish: $(System.DefaultWorkingDirectory)/justiceneuralnets-ui/target/justiceneuralnets-ui-1.0-SNAPSHOT-bin.jar
+  - publish: $(System.DefaultWorkingDirectory)/justiceneuralnets-ui/target/jusneuralnets-ui-1.0-SNAPSHOT-bin.jar
     artifact: jnn-ui.jar
-
-# - publish: $(System.DefaultWorkingDirectory)/JNNModel/target/site
-#   artifact: model-site
-# - publish: $(System.DefaultWorkingDirectory)/jnnevalmicroservice/target/site
-#   artifact: microservice-site
-# - publish: $(System.DefaultWorkingDirectory)/justiceneuralnets-ui/target/site
-#   artifact: ui-site
-# - publish: $(System.DefaultWorkingDirectory)/jnnevalmicroservice/target/justiceneuralnets-evalmicroservice-1.0-SNAPSHOT-bin.jar
-#   artifact: jnnmicroservice.jar
-# - publish: $(System.DefaultWorkingDirectory)/justiceneuralnets-ui/target/justiceneuralnets-ui-1.0-SNAPSHOT-bin.jar
-#   artifact: jnn-ui.jar
-
-# - task: ArchiveFiles@1
-#   displayName: 'Archive files'
-#   inputs:
-#     rootFolder: '$(System.DefaultWorkingDirectory)'
-#     includeRootFolder: false
-#     archiveType: zip
-
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish Artifact: drop'
